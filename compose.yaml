@@ -1,0 +1,22 @@
+services:
+  middleware:
+    image: "mcr.microsoft.com/appsvc/middleware:stage6"
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - WEBSITE_AUTH_FROM_FILE=1
+      - WEBSITE_AUTH_FILE_PATH=/home/config.json
+      - HTTP_LOGGING_ENABLED=1
+      - Host.DestinationHostUrl=${DESTINATION_URL}
+      - Host.AutoHealingMiddlewareEnabled=0
+      - Host.ListenUrl=http://0.0.0.0:8080
+      - Host.UseConsoleLogging=true
+      - Host.UseFileLogging=true
+      - Host.RewriteHostHeader=true
+      - MICROSOFT_PROVIDER_AUTHENTICATION_SECRET=${CLIENT_SECRET}
+      - WEBSITE_AUTH_ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - WEBSITE_AUTH_SIGNING_KEY=${SIGNING_KEY}
+    volumes:
+      - ./config.json:/home/config.json
